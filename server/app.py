@@ -1,6 +1,6 @@
 from flask import Flask,request,jsonify
 from flask_restful import Api,Resource
-from models import db,User,Score
+from server.models import db,User,Score
 from flask_migrate import Migrate
 
 
