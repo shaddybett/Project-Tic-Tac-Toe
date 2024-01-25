@@ -1,44 +1,79 @@
-from flask import Flask,request,jsonify
-from flask_restful import Api,Resource
-from server.models import db,User,Score
+
+from flask import Flask, jsonify, request, make_response, render_template, session
+from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
+from flask_restful import Api, Resource, marshal_with, fields
+
+from flask_cors import CORS, cross_origin
+
+from models import db, User, Score, UserScore
+
+import os
+
+abs_path = os.getcwd()
+abs_python_path = os.path.normpath(abs_path)
 
 
 app = Flask(__name__)
-api = Api(app)
-
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///project-tic-tac.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-db.init_app(app)
+app.config['SECRET_KEY'] = 'codeitownit'
+CORS(app, supports_credentials=True)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{abs_path}/db/app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.json.compact = False
+bcrypt = Bcrypt(app) 
 migrate = Migrate(app, db)
 
-class UserSection(Resource):
-    def post(self):
-        data = request.get_json()
-        if 'username' not in data or 'password' not in data:
-            return {'error': 'Username and pasword are required'},400
-        new_user= User(
-            username=data.get('username'),
-            password=data.get('password')
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        return jsonify(new_user.to_dict()),201
+db.init_app(app)
+
+api = Api(app)
+
+user_fields={
+    'id': fields.Integer,
+    'name': fields.String,
+    'email': fields.String,
+    'password': fields.String,
+}
+
+class Index(Resource):  
+    @cross_origin
+    def get(self):
+        response_dict = {
+            "index": "Welcome to the Heros RESTful API",
+        }
+        return jsonify(response_dict) 
     
+ 
+api.add_resource(Index, '/')
 
-class ScoreSection(Resource):
-    def post(self):
-        data = request.get_json()
-        new_score=Score(
-            scores=data.get('scores')
-        )
-        db.session.add(new_score)
-        db.session.commit()
-        return jsonify(new_score.to_dict()),201
-    
-api.add_resource(UserSection,'/user')
-api.add_resource(ScoreSection,'/score')    
+@app.route("/", methods=["POST"])
+def signup():
+    username = request.json["username"]
+    email = request.json["email"]
+    password = request.json["password"]
+ 
+    user_exists = User.query.filter_by(email=email).first() is not None
+ 
+    if user_exists:
+        return jsonify({"error": "Email already exists"}), 409
+     
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf8')
+    new_user = User(username=username, email=email, password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+ 
+    session["user_id"] = new_user.id
+ 
+    return jsonify({
+        "id": new_user.id,
+        "username": new_user.username,
+        "email": new_user.email,
+        "password": new_user.password,
+    })
+ 
 
-if __name__=='__main__':
-    app.run(debug=True,port=4000)
 
+
+
+
+if __name__ == '__main__':
+     app.run(port=5555, debug=True)
