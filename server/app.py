@@ -70,7 +70,23 @@ def signup():
         "password": new_user.password,
     })
  
-
+@app.route("/client/src/components/UserLogin.js", methods=["POST"])
+def login():
+    email = request.json["email"]
+    password = request.json["password"]
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({"error": "Email does not exist"}), 401
+    if not bcrypt.check_password_hash(user.password, password):
+        return jsonify({"error": "Password is incorrect"}), 401
+    session["user_id"] = user.id
+    return jsonify({
+        "id": user.id,
+        "email": user.email,
+        "password": user.password,
+        "created_at": user.created_at
+        
+    })
 
 
 
