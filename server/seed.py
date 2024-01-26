@@ -27,3 +27,5 @@ with app.app_context():
         db.session.add(user)
         db.session.add(score)
         db.session.commit()
+
+

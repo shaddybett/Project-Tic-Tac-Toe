@@ -1,13 +1,23 @@
-import { useState } from "react";
-import { useHistory } from "react-router";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 function SignupForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [formErrors, setFormErrors] = useState([]);
   const history = useHistory();
 
+  function handleUsernameChange(event) {
+    setUsername(event.target.value);
+  }
+
+  function handleEmailChange(event) {
+    setEmail(event.target.value);
+  }
+
+  function handlePasswordChange(event) {
+    setPassword(event.target.value);
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -15,8 +25,8 @@ function SignupForm() {
       username: username,
       email: email,
       password: password,
-     
     };
+
     fetch("/", {
       method: "POST",
       headers: {
@@ -25,36 +35,34 @@ function SignupForm() {
       body: JSON.stringify(formData),
     }).then((r) => {
       if (r.ok) {
-        history.push(`/game`);
+        history.push(`/select`);
       } else {
-        r.json().then((err) => setFormErrors(err.errors));
+        r.json().then((err) => console.log(err.errors));
       }
     });
   }
 
   return (
-   
     <form method="post" onSubmit={handleSubmit}>
-      <label htmlFor="username">Username:</label>
-      <input type="text" class="form-control" id="username1" onChange={(e) => setUsername(e.target.value)} aria-describedby="usernameHelp" value={username} placeholder="username" name="username" required/>
-      
-      <label htmlFor="email">Email:</label>
-      <input type="email" class="form-control" id="email1" onChange={(e) => setEmail(e.target.value)} aria-describedby="emailHelp" value={email} placeholder="email" name="email" required/>
-
-      <label htmlFor="price">Password:</label>
-      <input type="text"
-        id="password1"
-        name="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      {formErrors.length > 0
-        ? formErrors.map((err) => (
-            <p key={err} style={{ color: "red" }}>
-              {err}
-            </p>
-          ))
-        : null}
+      <label>
+        Username:
+        <input type="text" value={username} onChange={handleUsernameChange} />
+      </label>
+      <br />
+      <label>
+        Email:
+        <input type="text" value={email} onChange={handleEmailChange} />
+      </label>
+      <br />
+      <label>
+        Password:
+        <input
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
+        />
+      </label>
+      <br />
       <button type="submit">Signup</button>
     </form>
   );

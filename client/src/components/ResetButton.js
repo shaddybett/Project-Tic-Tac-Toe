@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import "../index.css"
+import "../index.css";
 
 export const ResetButton = ({ resetBoard }) => {
-    return (
-        <button className="reset-btn" onClick={resetBoard}>Reset</button>
-    )
-}
+  return (
+    <button className="reset-btn" onClick={resetBoard}>
+      Play Again
+    </button>
+  );
+};
