@@ -1,100 +1,74 @@
-import { useState } from "react";
+import React, { useState } from 'react';
+import '../index'; 
 import { useHistory } from "react-router";
 
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const[formErrors, setFormErrors] = useState('');
+  const history = useHistory();
 
-
-
-
-function LoginForm() {
-    const [email,setEmail] = useState('');
-    const [password,setPassword] = useState('');
-    const [formErrors, setFormErrors] = useState([]);
-    const history = useHistory();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = {
+      email: email,
+      password: password,
      
-    const logInUser = () => {
-        if(email.length === 0){
-          alert("Email has left Blank!");
-        }
-        else if(password.length === 0){
-          alert("password has left Blank!");
-        }
-        else{
-            fetch('/login', {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-              })
-            .then((r) => {
-                if (r.ok) {
-                  history.push(`/`);
-                } else {
-                  r.json().then((err) => setFormErrors(err.errors));
-                }
-              })
-            .catch(function (error) {
-                console.log(error, 'error');
-                if (error.response.status === 401) {
-                    alert("Invalid credentials");
-                }
-            });
-        }
-    }
- 
+    };
+    if(email.length === 0) {
+      alert("Email is required")
+  }else if(password.length === 0) {
+    alert("Password is required")
+
+  }else{
+    fetch('/login',{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    }).then((r) => {
+      if (r.ok) {
+        history.push(`/game`);
+      } else {
+        r.json().then((err) => setFormErrors(err.errors));
+      }
+    });
+  }
+}
+
   return (
-    <div>
-        <div className="container h-100">
-          <div className="container-fluid h-custom">
-            <div className="row d-flex justify-content-center align-items-center h-100">
-              <div className="col-md-9 col-lg-6 col-xl-5">
-                <img src={imgs[0]} className="img-fluid"/>
-              </div>
-              <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form>
-                  <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                    <p className="lead fw-normal mb-0 me-3">Log Into Your Account</p>
-                  </div>
- 
-                  <div className="form-outline mb-4">
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" />
-                    <label className="form-label" for="form3Example3">Email address</label>
-                  </div>
- 
-             
-                  <div className="form-outline mb-3">
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="form3Example4" className="form-control form-control-lg" placeholder="Enter password" />
-                    <label className="form-label" for="form3Example4">Password</label>
-                  </div>
- 
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div className="form-check mb-0">
-                      <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
-                      <label className="form-check-label" for="form2Example3">
-                        Remember me
-                      </label>
-                    </div>
-                    <a href="#!" className="text-body">Forgot password?</a>
-                  </div>
-                  {formErrors.length > 0
+    <div className="login-container">
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Email:</label>
+          <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </div>
+        {formErrors.length > 0
         ? formErrors.map((err) => (
             <p key={err} style={{ color: "red" }}>
               {err}
             </p>
           ))
         : null}
- 
-                  <div className="text-center text-lg-start mt-4 pt-2">
-                    <button type="button" className="btn btn-primary btn-lg" onClick={logInUser} >Login</button>
-                    <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/register" className="link-danger">Register</a></p>
-                  </div>
- 
-                </form>
-              </div>
-            </div>
-          </div>
+        <div className="form-group">
+          <button type="submit">Login</button>
         </div>
+      </form>
+      <p>
+        Don't have an account? <a href="/signup">Create Account</a>
+      </p>
+      <p>
+        Forgot your password? <a href="/forgot-password">Reset Password</a>
+      </p>
     </div>
   );
-}
-export default LoginForm;
+};
+
+export default Login;
+

@@ -348,7 +348,7 @@ class Index(Resource):
 
 api.add_resource(Index, '/')
 
-@app.route("/", methods=["POST"])
+@app.route("/signup", methods=["POST"])
 def signup():
     username = request.json["username"]
     email = request.json["email"]
@@ -372,6 +372,24 @@ def signup():
         "email": new_user.email,
         "password": new_user.password,
     })
+
+@app.route("/login", methods=["POST"])
+def login():
+    if request.method == "POST":
+        email = request.json["email"]
+        password = request.json["password"]
+        user = User.query.filter_by(email=email).first()
+        if user is None:
+            return jsonify({"error": "Email does not exist"}), 401
+        if not bcrypt.check_password_hash(user.password, password):
+            return jsonify({"error": "Password is incorrect"}), 401
+        session["user_id"] = user.id
+        return jsonify({
+            "id": user.id,
+            "email": user.email,
+            "password": user.password,
+            
+        })
 
 @app.route("/get_scores", methods=["GET"])
 def get_scores():
