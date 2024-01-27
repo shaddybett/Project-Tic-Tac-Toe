@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 
 const Select = () => {
   return (
-    <div>
-      <h2>Select Page</h2>
-      <Link to="/game">New Game</Link>
-      <Link to="/scores">Scores</Link>
+    <div className='select-div'>
+      <h1 className='select-heading'>Select Page</h1>
+      
+      <Link to="/game" className='game'>New Game</Link>
+      <Link to="/scores" className='game'>Scores</Link>
     </div>
   );
 };
