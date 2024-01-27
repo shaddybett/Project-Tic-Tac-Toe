@@ -70,11 +70,11 @@ const AllScores = () => {
 
   return (
     <div className="ScoresPage">
-      <h2>Scores</h2>
-      <Link to="/select">Go Back</Link>
+      <h1>Scores</h1>
+      <Link to="/select" className="back">Go Back</Link>
       <ul>
         {scores.map((score, index) => (
-          <li key={index}>
+          <li key={index} className="list">
             Player: {score.username}, Score: {score.score_value}, Round:{" "}
             {score.round_number}
           </li>

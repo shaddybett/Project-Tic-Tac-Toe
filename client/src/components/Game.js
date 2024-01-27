@@ -220,15 +220,15 @@ const Game = () => {
   };
 
   return (
-    <div className="Game">
+    <div className="Game-page">
       <ScoreBoard scores={scores} xPlaying={xPlaying} />
       <Board board={board} onClick={gameOver ? resetGame : handleBoxClick} />
-      {gameOver && (
+      {/* {gameOver && ()} */}
         <div>
           <ResetButton resetBoard={resetGame} />
-          <button onClick={() => history.push("/select")}>Quit</button>{/* Use history.push to navigate */}
+          <button onClick={() => history.push("/select")} className="quit">Quit</button>{/* Use history.push to navigate */}
         </div>
-      )}
+      
     </div>
   );
 };
