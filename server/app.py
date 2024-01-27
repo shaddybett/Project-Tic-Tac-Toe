@@ -1,10 +1,9 @@
 
-
 # from flask import Flask, jsonify, request, session
 # from flask_bcrypt import Bcrypt
 # from flask_migrate import Migrate
 # from flask_restful import Api, Resource, fields
-
+# from models import UserScore
 # from flask_cors import CORS, cross_origin
 
 # from models import db, User, Score, UserScore
@@ -73,28 +72,32 @@
 # # app.py
 
 # # ... (existing imports)
-
 # @app.route("/get_scores", methods=["GET"])
 # def get_scores():
-#     user_scores = UserScore.query.all()
+#     print("Request received for get_scores")  # Debug print
+#     # Use a join to fetch scores along with associated user information
+#     scores = db.session.query(User.username, Score.score_value, Score.round_number).\
+#         join(UserScore, User.id == UserScore.user_id).\
+#         join(Score, Score.id == UserScore.score_id).all()
+
 #     scores_list = [
 #         {
-#             "username": score.user.username,  # Access username through the relationship
-#             "score_value": score.score.score_value,
-#             "round_number": score.score.round_number
+#             "username": username,
+#             "score_value": score_value,
+#             "round_number": round_number
 #         }
-#         for score in user_scores
+#         for username, score_value, round_number in scores
 #     ]
+
+#     print("Server returning scores:", scores_list)  # Debug print
 #     return jsonify(scores_list)
 
-
 # # app.py
 # # app.py
 
 # # ... (existing imports)
 # # ... (existing imports)
-
-# @app.route("/save_scores", methods=["POST"])
+# @app.route("/save_scores", methods=["POST", "OPTIONS"])
 # def save_scores():
 #     try:
 #         data = request.json
@@ -112,6 +115,14 @@
 #         db.session.add_all([new_score_x, new_score_o])
 #         db.session.commit()
 #         print("Scores saved successfully")  # Debug print
+
+#         # Create UserScore objects and associate them with the User and Score objects
+#         new_user = User.query.first()  # Replace with your logic to fetch the user
+#         new_user_score_x = UserScore(user_id=new_user.id, score_id=new_score_x.id)
+#         new_user_score_o = UserScore(user_id=new_user.id, score_id=new_score_o.id)
+
+#         db.session.add_all([new_user_score_x, new_user_score_o])
+#         db.session.commit()
 
 #         # Check if the game has ended (e.g., after 5 rounds)
 #         if round_number >= 5:
@@ -132,7 +143,8 @@
 
 
 
-from flask import Flask, jsonify, request, session
+
+from flask import Flask, jsonify, request, session,make_response
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask_restful import Api, Resource, fields
@@ -231,12 +243,20 @@ def get_scores():
 # ... (existing imports)
 # ... (existing imports)
 @app.route("/save_scores", methods=["POST", "OPTIONS"])
+@cross_origin()  # Add this decorator to handle CORS for the specific route
 def save_scores():
+    if request.method == "OPTIONS":
+        # Handling preflight request, return empty response with appropriate CORS headers
+        response = make_response()
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        response.headers["Access-Control-Allow-Methods"] = "POST"
+        return response
+
     try:
         data = request.json
         x_score = data.get("xScore", 0)
         o_score = data.get("oScore", 0)
-
         # Determine the round number based on the number of existing scores
         round_number = (Score.query.count() // 2) + 1
         print("Received data:", data)  # Debug print
@@ -260,7 +280,6 @@ def save_scores():
         # Check if the game has ended (e.g., after 5 rounds)
         if round_number >= 5:
             return jsonify({"message": "Game Over. Scores saved successfully.", "end_game": True})
-
         return jsonify({"message": "Scores saved successfully", "end_game": False})
     except Exception as e:
         print("Error saving scores:", str(e))
