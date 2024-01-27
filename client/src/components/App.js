@@ -4,7 +4,7 @@ import Game from "./Game";
 import SignupForm from "./signup";
 import Select from "./Select"; // Import the Select component
 import AllScores from "./AllScores";
-import Home from "./Home";
+
 import LoginForm from "./UserLogin";
 
 function App() {
@@ -24,10 +24,7 @@ function App() {
           <Route exact path="/signup">
             <SignupForm />
           </Route>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route  exact path="/login">
+          <Route  exact path="/">
             <LoginForm /> 
           </Route>
         </Switch>
