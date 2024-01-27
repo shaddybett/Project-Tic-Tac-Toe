@@ -34,30 +34,39 @@ function SignupForm() {
   }
 
   return (
-   
-    <form method="post" onSubmit={handleSubmit}>
-      <label htmlFor="username">Username:</label>
-      <input type="text" className="form-control" id="username1" onChange={(e) => setUsername(e.target.value)} aria-describedby="usernameHelp" value={username} placeholder="username" name="username" required/>
-      
-      <label htmlFor="email">Email:</label>
-      <input type="email" className="form-control" id="email1" onChange={(e) => setEmail(e.target.value)} aria-describedby="emailHelp" value={email} placeholder="email" name="email" required/>
-
-      <label htmlFor="price">Password:</label>
-      <input type="password"
-        id="password1"
-        name="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      {formErrors.length > 0
-        ? formErrors.map((err) => (
+    <div className="form-div">
+      <form method="post" onSubmit={handleSubmit}>
+      <div className="form-outline mb-4 form-group">
+        <label htmlFor="username">Username:</label>
+        <input type="text" className="input-field" id="username1" onChange={(e) => setUsername(e.target.value)} aria-describedby="usernameHelp" value={username} placeholder="username" name="username" required/>
+      </div>
+      <div className="form-outline mb-4 form-group">
+        <label htmlFor="email">Email:</label>
+        <input type="email" className="input-field" id="email1" onChange={(e) => setEmail(e.target.value)} aria-describedby="emailHelp" value={email} placeholder="email" name="email" required/>
+      </div>
+      <div className="form-outline mb-4 form-group">
+        <label htmlFor="price">Password:</label>
+        <input type="password"
+          id="password1"
+          name="password"
+          className="input-field"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        </div>
+        {formErrors.length > 0
+          ? formErrors.map((err) => (
             <p key={err} style={{ color: "red" }}>
               {err}
             </p>
           ))
         : null}
-      <button type="submit">Signup</button>
-    </form>
+         <div className="form-outline mb-4 form-group2">
+            <button type="submit" id="signup-btn">Signup</button>
+          </div>   
+      </form>
+    </div>
+   
   );
 }
 
