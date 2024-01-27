@@ -406,8 +406,8 @@ def save_scores():
 
     try:
         data = request.json
-        x_score = data.get("xScore", 0)
-        o_score = data.get("oScore", 0)
+        x_score = data.get("xScore")
+        o_score = data.get("oScore")
 
         # Check if the usernames already exist
         user_x = User.query.filter_by(username="Player Blue").first()
@@ -454,5 +454,7 @@ def save_scores():
     except Exception as e:
         print("Error saving scores:", str(e))
         return jsonify({"error": "Internal server error"}), 500
+
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
