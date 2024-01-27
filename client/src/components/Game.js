@@ -158,7 +158,7 @@ const Game = () => {
     if (winner) {
       updateScores(winner);
       setRounds(rounds + 1);
-      if (rounds === 3) {
+      if (rounds === 4) {
         // Check if it's the fourth round (0-based index)
         setGameOver(true);
         saveScoresToDatabase();
