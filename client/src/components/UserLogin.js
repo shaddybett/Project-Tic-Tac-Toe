@@ -66,13 +66,13 @@ function LoginForm() {
                   </div>
  
                   <div className="form-outline mb-4 form-group">
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} id="form3Example3" className="form-control form-control-lg" placeholder="Enter a valid email address" />
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} id="form3Example3" className="input-field" placeholder="Enter a valid email address" />
                     <label className="form-label" for="form3Example3">Email address</label>
                   </div>
  
              
                   <div className="form-outline mb-3 form-group">
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="form3Example4" className="form-control form-control-lg" placeholder="Enter password" />
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="form3Example4" className="input-field" placeholder="Enter password" />
                     <label className="form-label" for="form3Example4">Password</label>
                   </div>
 
