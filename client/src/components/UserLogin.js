@@ -1,56 +1,63 @@
 import { useState } from "react";
-import { useHistory } from "react-router";
-import "../index"
-
-
-
-
+import { useHistory } from "react-router-dom"; // Assuming you are using react-router-dom for navigation
 
 function LoginForm() {
-    const [email,setEmail] = useState('');
-    const [password,setPassword] = useState('');
-    const [formErrors, setFormErrors] = useState([]);
-    const history = useHistory();
-   
-      const handleSubmit = (e) =>{
-        e.preventDefault ()
-        const formData = {
-          email :email,
-          password : password,
-        }
-        if(email.length === 0){
-          alert("Email has left Blank!");
-        }
-        else if(password.length === 0){
-          alert("password has left Blank!");
-        }
-        else{
-            fetch('/login', {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-              })
-            .then((r) => {
-                if (r.ok) {
-                  history.push(`/`);
-                } else {
-                  r.json().then((err) => setFormErrors(err.errors));
-                }
-              })
-            .catch(function (error) {
-                console.log(error, 'error');
-                if (error.response.status === 401) {
-                    alert("Invalid credentials");
-                }
-            });
-        }
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [formErrors, setFormErrors] = useState([]);
+  const history = useHistory();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = {
+      email: email,
+      password: password,
+    };
+
+    // Clear previous errors
+    setFormErrors([]);
+
+    // Basic form validation
+    if (email.trim() === '') {
+      setFormErrors(["Email cannot be blank"]);
+      return;
     }
+
+    if (password.trim() === '') {
+      setFormErrors(["Password cannot be blank"]);
+      return;
+    }
+
+    // Fetch data from the server
+    fetch('/login', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          history.push('/');
+        } else if (response.status === 401) {
+          setFormErrors(["Invalid credentials"]);
+        } else if (response.status === 400) {
+          return response.json();
+        } else {
+          throw new Error("Unexpected error occurred");
+        }
+      })
+      .then((err) => {
+        if (err && err.errors) {
+          setFormErrors(err.errors);
+        }
+      })
+      .catch((error) => {
+        console.error("Error during login:", error);
+      });
+  };
  
-      
-    
-        
   return (
     <div>
         <div className="login-page">
