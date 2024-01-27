@@ -446,6 +446,10 @@ def save_scores():
         db.session.add_all([new_user_score_x, new_user_score_o])
         db.session.commit()
 
+        # Debug prints to check values
+        print(f"Player: {user_x.username}, Score: {new_score_x.score_value}, Round: {round_number}")
+        print(f"Player: {user_o.username}, Score: {new_score_o.score_value}, Round: {round_number}")
+
         # Check if the game has ended (e.g., after 5 rounds)
         if round_number >= 5:
             return jsonify({"message": "Game Over. Scores saved successfully.", "end_game": True, "round_number": round_number})
@@ -454,7 +458,6 @@ def save_scores():
     except Exception as e:
         print("Error saving scores:", str(e))
         return jsonify({"error": "Internal server error"}), 500
-
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

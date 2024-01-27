@@ -71,6 +71,7 @@ const AllScores = () => {
   return (
     <div className="ScoresPage">
       <h2>Scores</h2>
+      <Link to="/select">Go Back</Link>
       <ul>
         {scores.map((score, index) => (
           <li key={index}>
@@ -79,7 +80,7 @@ const AllScores = () => {
           </li>
         ))}
       </ul>
-      <Link to="/select">Go Back</Link>
+      
     </div>
   );
 };
