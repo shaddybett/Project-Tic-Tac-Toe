@@ -309,6 +309,7 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource, fields
 from models import UserScore
 from flask_cors import CORS, cross_origin
+from sqlalchemy import func
 
 from models import db, User, Score, UserScore
 
@@ -425,7 +426,7 @@ def save_scores():
         db.session.commit()
 
         # Determine the round number based on the number of existing scores for the current game
-        max_round_number = db.session.query(db.func.max(Score.round_number)).scalar()
+        max_round_number = db.session.query(func.max(Score.round_number)).scalar()
         round_number = max_round_number + 1 if max_round_number else 1
 
         print("Received data:", data)  # Debug print
@@ -447,12 +448,11 @@ def save_scores():
 
         # Check if the game has ended (e.g., after 5 rounds)
         if round_number >= 5:
-            return jsonify({"message": "Game Over. Scores saved successfully.", "end_game": True})
+            return jsonify({"message": "Game Over. Scores saved successfully.", "end_game": True, "round_number": round_number})
 
-        return jsonify({"message": "Scores saved successfully", "end_game": False})
+        return jsonify({"message": "Scores saved successfully", "end_game": False, "round_number": round_number})
     except Exception as e:
         print("Error saving scores:", str(e))
         return jsonify({"error": "Internal server error"}), 500
-
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
