@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useHistory } from "react-router";
+import "../index"
 
 
 
@@ -10,8 +11,13 @@ function LoginForm() {
     const [password,setPassword] = useState('');
     const [formErrors, setFormErrors] = useState([]);
     const history = useHistory();
-     
-    const logInUser = () => {
+   
+      const handleSubmit = (e) =>{
+        e.preventDefault ()
+        const formData = {
+          email :email,
+          password : password,
+        }
         if(email.length === 0){
           alert("Email has left Blank!");
         }
@@ -42,16 +48,19 @@ function LoginForm() {
         }
     }
  
+      
+    
+        
   return (
     <div>
         <div className="container h-100">
           <div className="container-fluid h-custom">
             <div className="row d-flex justify-content-center align-items-center h-100">
               <div className="col-md-9 col-lg-6 col-xl-5">
-                <img src={imgs[0]} className="img-fluid"/>
+            
               </div>
               <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                     <p className="lead fw-normal mb-0 me-3">Log Into Your Account</p>
                   </div>
@@ -85,7 +94,7 @@ function LoginForm() {
         : null}
  
                   <div className="text-center text-lg-start mt-4 pt-2">
-                    <button type="button" className="btn btn-primary btn-lg" onClick={logInUser} >Login</button>
+                    <button type="submit" className="btn btn-primary btn-lg"  >Login</button>
                     <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/register" className="link-danger">Register</a></p>
                   </div>
  

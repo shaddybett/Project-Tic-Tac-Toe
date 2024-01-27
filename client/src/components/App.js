@@ -4,6 +4,8 @@ import Game from "./Game";
 import SignupForm from "./signup";
 import Select from "./Select"; // Import the Select component
 import AllScores from "./AllScores";
+import Home from "./Home";
+import LoginForm from "./UserLogin";
 
 function App() {
   return (
@@ -19,8 +21,14 @@ function App() {
           <Route exact path="/scores">
             <AllScores />
           </Route>
-          <Route exact path="/">
+          <Route exact path="/signup">
             <SignupForm />
+          </Route>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route  exact path="/login">
+            <LoginForm /> 
           </Route>
         </Switch>
       </main>
