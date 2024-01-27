@@ -39,7 +39,7 @@ function LoginForm() {
     })
       .then((response) => {
         if (response.ok) {
-          history.push('/');
+          history.push('/select');
         } else if (response.status === 401) {
           setFormErrors(["Invalid credentials"]);
         } else if (response.status === 400) {
