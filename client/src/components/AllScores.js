@@ -43,6 +43,7 @@
 
 // AllScores.js
 
+// ... (existing imports)
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -55,11 +56,12 @@ const AllScores = () => {
 
   const fetchScores = async () => {
     try {
-      const response = await fetch("http://localhost:5555/get_scores");
+      const response = await fetch("/get_scores");
       if (!response.ok) {
         throw new Error("Failed to fetch scores");
       }
       const data = await response.json();
+      console.log("Fetched Scores:", data);
       setScores(data);
     } catch (error) {
       console.error("Error fetching scores:", error.message);
