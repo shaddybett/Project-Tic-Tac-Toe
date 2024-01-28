@@ -3,7 +3,7 @@
 # Backend
 
 # Introduction
-Welcome to the Heroes RESTful API! This API is built using Flask, a Python web framework, and it provides endpoints for user authentication and various functionalities related to heroes.
+Welcome to our RESTful API! This API is built using Flask, a Python web framework, and it provides endpoints for user authentication and various functionalities related to tic tac toe.
 
 # Getting Started
 To run this API locally, follow these steps:
@@ -23,7 +23,7 @@ The API will be accessible at http://localhost:5555.
 1. Index
 Endpoint: /
 Method: GET
-Description: Returns a welcome message for the Heroes RESTful API.
+Description: Returns a welcome message for the RESTful API.
 2. User Signup
 Endpoint: /
 Method: POST
