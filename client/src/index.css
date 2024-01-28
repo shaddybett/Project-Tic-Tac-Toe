@@ -156,6 +156,7 @@ code {
   border-bottom: 5px solid transparent;
 }
 
+/*forms*/
 .login-page {
   background-image: url('https://t3.ftcdn.net/jpg/02/85/90/44/360_F_285904463_52tKiXp592qUhmg24eS3f4k1kGQSji3f.jpg'); 
   background-size: cover;
@@ -206,7 +207,6 @@ code {
   color: white;
   padding: 5px;
   border-radius: 20px;
-  /* background-color: rgb(19, 159, 252); */
   margin-top: 20px;
 }
 
