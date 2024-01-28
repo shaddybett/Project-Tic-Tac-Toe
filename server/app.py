@@ -62,7 +62,7 @@ def signup():
         "username": new_user.username,
         "email": new_user.email,
         "password": new_user.password,
-    })
+    }), 201
 
 @app.route("/login", methods=["POST"])
 def login():

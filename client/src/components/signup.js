@@ -27,10 +27,24 @@ function SignupForm() {
     }).then((r) => {
       if (r.ok) {
         history.push(`/select`);
+      } else if (r.status === 409) {
+        setFormErrors(["Email already exists"]);
       } else {
-        r.json().then((err) => setFormErrors(err.errors));
+        throw new Error("Unexpected error occurred");
       }
+    })
+    .then((err) => {
+      if (err && err.errors) {
+        setFormErrors(err.errors);
+      }
+    })
+    .catch((error) => {
+      console.error("Error during signup:", error);
     });
+    //   } else {
+    //     r.json().then((err) => setFormErrors(err.errors));
+    //   }
+    // });
   }
 
   return (
