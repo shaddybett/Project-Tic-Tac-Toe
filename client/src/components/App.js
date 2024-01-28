@@ -2,6 +2,7 @@ import { Switch, Route } from "react-router-dom";
 import Game from "./Game";
 import SignupForm from "./signup";
 import Login from "./UserLogin";
+import { ScoreBoard } from "./ScoreBoard";
 import '../index.css'
 
 function App() {
@@ -11,6 +12,9 @@ function App() {
         <Switch>
         <Route exact path="/">
             <Login />
+          </Route>
+          <Route exact path="/">
+            <ScoreBoard />
           </Route>
           <Route exact path="/game">
             <Game/>
