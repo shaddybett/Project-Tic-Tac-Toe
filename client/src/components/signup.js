@@ -41,7 +41,7 @@ function SignupForm() {
       }
     })
     .catch((error) => {
-      console.error("Error during login:", error);
+      console.error("Error during signup:", error);
     });
   }
 
