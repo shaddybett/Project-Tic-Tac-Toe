@@ -27,9 +27,9 @@ function SignupForm() {
     }).then((r) => {
       if (r.ok) {
         history.push(`/select`);
-      } else if (response.status === 401) {
+      } else if (r.status === 401) {
         setFormErrors(["Invalid credentials"]);
-      } else if (response.status === 400) {
+      } else if (r.status === 400) {
         return response.json();
       } else {
         throw new Error("Unexpected error occurred");
