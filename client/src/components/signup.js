@@ -28,9 +28,7 @@ function SignupForm() {
       if (r.ok) {
         history.push(`/select`);
       } else if (r.status === 409) {
-        setFormErrors(["Invalid credentials"]);
-      } else if (r.status === 400) {
-        return response.json();
+        setFormErrors(["Email already exists"]);
       } else {
         throw new Error("Unexpected error occurred");
       }
