@@ -91,16 +91,7 @@
 //     setBoard(Array(9).fill(null));
 //   };
 
-//   return (
-//     <div className="Game">
-//       <ScoreBoard scores={scores} xPlaying={xPlaying} />
-//       <Board board={board} onClick={gameOver ? resetBoard : handleBoxClick} />
-//       {gameOver && <ResetButton resetBoard={resetBoard} />}
-//     </div>
-//   );
-// };
 
-// export default Game;
 
 import React, { useState, useEffect, useMemo } from "react";
 import clickSound from "./sounds/button-124476.mp3";
