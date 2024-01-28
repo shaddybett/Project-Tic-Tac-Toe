@@ -1,4 +1,4 @@
-# Project-Tic-Tac-Toc
+# Project-Tic-Tac-Toe
 
 Welcome to the Tic Tac Toe React application! This simple and classic game has been implemented using React, allowing you to enjoy the timeless fun of Tic Tac Toe in a modern and interactive way.
 
