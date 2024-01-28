@@ -27,9 +27,21 @@ function SignupForm() {
     }).then((r) => {
       if (r.ok) {
         history.push(`/select`);
+      } else if (response.status === 401) {
+        setFormErrors(["Invalid credentials"]);
+      } else if (response.status === 400) {
+        return response.json();
       } else {
-        r.json().then((err) => setFormErrors(err.errors));
+        throw new Error("Unexpected error occurred");
       }
+    })
+    .then((err) => {
+      if (err && err.errors) {
+        setFormErrors(err.errors);
+      }
+    })
+    .catch((error) => {
+      console.error("Error during login:", error);
     });
   }
 
