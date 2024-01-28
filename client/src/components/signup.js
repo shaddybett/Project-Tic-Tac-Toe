@@ -29,8 +29,8 @@ function SignupForm() {
         history.push(`/select`);
       } else if (r.status === 409) {
         setFormErrors(["Email already exists"]);
-      } else {
-        throw new Error("Unexpected error occurred");
+      }else {
+        r.json().then((err) => setFormErrors(err.errors));
       }
     })
     .then((err) => {
