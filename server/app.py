@@ -1,5 +1,4 @@
 
-
 from flask import Flask, jsonify, request, session, make_response
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
