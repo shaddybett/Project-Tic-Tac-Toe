@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, request, session, make_response
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_restful import Api, Resource, fields
 from models import UserScore
 from flask_cors import CORS, cross_origin
@@ -22,6 +23,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
  # Corrected attribute name
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
+jwt = JWTManager(app)
 
 db.init_app(app)
 
@@ -43,6 +45,9 @@ def signup():
     username = request.json["username"]
     email = request.json["email"]
     password = request.json["password"]
+
+    if not username or not email or not password:
+        return jsonify({"message": "All credentials are required"}), 400
  
     user_exists = User.query.filter_by(email=email).first() is not None
  
@@ -68,18 +73,23 @@ def login():
     if request.method == "POST":
         email = request.json["email"]
         password = request.json["password"]
+
+        if not email or not password:
+            return jsonify({"message": "All credentials are required"}), 400
         user = User.query.filter_by(email=email).first()
         if user is None:
             return jsonify({"error": "Email does not exist"}), 401
         if not bcrypt.check_password_hash(user.password, password):
             return jsonify({"error": "Password is incorrect"}), 401
         session["user_id"] = user.id
-        return jsonify({
-            "id": user.id,
-            "email": user.email,
-            "password": user.password,
+        access_token = create_access_token(identity=email)
+        return jsonify(access_token=access_token), 200
+        # return jsonify({
+        #     "id": user.id,
+        #     "email": user.email,
+        #     "password": user.password
             
-        })
+        # })
 
 @app.route("/get_scores", methods=["GET"])
 def get_scores():
