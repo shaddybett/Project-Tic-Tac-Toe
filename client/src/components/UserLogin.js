@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom"; // Assuming you are using react-router-dom for navigation
+import UserProfile from "./UserProfile";
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formErrors, setFormErrors] = useState([]);
+  
   const history = useHistory();
 
   const handleSubmit = (e) => {
@@ -57,8 +59,11 @@ function LoginForm() {
         console.error("Error during login:", error);
       });
   };
+
+  
  
   return (
+
     <div>
         <div className="login-page">
           <div className="container-fluid h-custom">
@@ -105,13 +110,12 @@ function LoginForm() {
           ))
         : null}
  
-                  
- 
                 </form>
               </div>
             </div>
           </div>
         </div>
+        
     </div>
   );
 }

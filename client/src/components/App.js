@@ -6,6 +6,7 @@ import Select from "./Select"; // Import the Select component
 import AllScores from "./AllScores";
 
 import LoginForm from "./UserLogin";
+import UserProfile from "./UserProfile";
 
 function App() {
   return (
