@@ -28,15 +28,25 @@ const AllScores = () => {
     <div className="ScoresPage">
       <h1>Scores</h1>
       <Link to="/select" className="back">Go Back</Link>
-      <ul>
-        {scores.map((score, index) => (
-          <li key={index} className="list">
-            Player: {score.username}, Score: {score.score_value}, Round:{" "}
-            {score.round_number}
-          </li>
-        ))}
-      </ul>
-      
+      <table>
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Score</th>
+                <th>Round</th>
+            </tr>
+        </thead>
+        <tbody>
+          {scores.map((score, index)=>(
+            <tr key={index}>
+            <td>{score.username}</td>
+            <td>{score.score_value}</td>
+            <td>{score.round_number}</td>
+        </tr>
+
+          ))}
+        </tbody>
+    </table>
     </div>
   );
 };
