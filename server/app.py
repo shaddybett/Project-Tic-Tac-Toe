@@ -23,9 +23,9 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
 
+
 db.init_app(app)
 
-api = Api(app)
 
 user_fields = {
     'id': fields.Integer,
@@ -34,9 +34,51 @@ user_fields = {
     'password': fields.String,
 }
 
+
 @app.route("/")
 def home():
-    return jsonify({"home": "welcome to tictactoe"})
+    return jsonify({"home": "welcome to tictactoe"}), 200
+
+
+@app.route("/profile", methods=['GET'])
+
+def patch():
+    user = User.query.filter(User.id == id).first()
+
+    data = request.get_json()
+
+    if user:
+        for attr in data:
+            setattr(user, attr, data[attr])
+
+        db.session.add(user)
+        db.session.commit()
+
+        response_body = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "password": user.password
+        }
+
+        return response_body, 201
+
+    return {
+        "error": "User not found"
+    }, 400
+
+def delete():
+    user = User.query.filter_by(id=id).first()
+
+    if user:
+        UserScore.query.filter_by(user_id=id).delete()
+        db.session.delete(user)
+        db.session.commit()
+        return '', 204
+    else:
+        return jsonify({"error": "User not found"}), 404
+    
+
 
 @app.route("/signup", methods=["POST"])
 def signup():
@@ -55,13 +97,16 @@ def signup():
     db.session.commit()
  
     session["user_id"] = new_user.id
+    session["username"] = new_user.username
+    session["email"] = new_user.email
+    session["password"] = new_user.password
  
     return jsonify({
         "id": new_user.id,
         "username": new_user.username,
         "email": new_user.email,
         "password": new_user.password,
-    })
+    }), 201
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -70,16 +115,21 @@ def login():
         password = request.json["password"]
         user = User.query.filter_by(email=email).first()
         if user is None:
-            return jsonify({"error": "Email does not exist"}), 401
+            return jsonify({"error": "Email does not exist"}), 404
         if not bcrypt.check_password_hash(user.password, password):
-            return jsonify({"error": "Password is incorrect"}), 401
-        session["user_id"] = user.id
+            return jsonify({"error": "Password is incorrect"}), 404
+        
+        session['loggedin'] = True
+        session['userid'] = user.id
+        session['username'] = user.username
+        session['email'] = user.email
+        session['password'] = user.password
         return jsonify({
             "id": user.id,
             "email": user.email,
             "password": user.password,
             
-        })
+        }), 201
 
 @app.route("/get_scores", methods=["GET"])
 def get_scores():
