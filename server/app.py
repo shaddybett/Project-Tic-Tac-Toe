@@ -1,8 +1,8 @@
 
 from flask import Flask, jsonify, request, session, make_response
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_restful import Api, Resource, fields
 from models import UserScore
 from flask_cors import CORS, cross_origin
@@ -23,8 +23,8 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
  # Corrected attribute name
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
-jwt = JWTManager(app)
 
+login_manager = LoginManager(app)
 
 db.init_app(app)
 
@@ -36,6 +36,9 @@ user_fields = {
     'password': fields.String,
 }
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.route("/")
 def home():
@@ -43,7 +46,10 @@ def home():
 
 
 @app.route("/profile", methods=['GET'])
-
+@login_required
+def get_profile():
+    # Return user profile information
+    return jsonify({'user_id': current_user.id, 'username': current_user.username})
 def patch():
     user = User.query.filter(User.id == id).first()
 
@@ -87,9 +93,6 @@ def signup():
     username = request.json["username"]
     email = request.json["email"]
     password = request.json["password"]
-
-    if not username or not email or not password:
-        return jsonify({"message": "All credentials are required"}), 400
  
     user_exists = User.query.filter_by(email=email).first() is not None
  
@@ -102,9 +105,6 @@ def signup():
     db.session.commit()
  
     session["user_id"] = new_user.id
-    session["username"] = new_user.username
-    session["email"] = new_user.email
-    session["password"] = new_user.password
  
     return jsonify({
         "id": new_user.id,
@@ -118,17 +118,23 @@ def login():
     if request.method == "POST":
         email = request.json["email"]
         password = request.json["password"]
-
-        if not email or not password:
-            return jsonify({"message": "All credentials are required"}), 400
         user = User.query.filter_by(email=email).first()
         if user is None:
             return jsonify({"error": "Email does not exist"}), 404
-        if not bcrypt.check_password_hash(user.password, password)
-        return jsonify({"error": "Password is incorrect"}), 401
-        session["user_id"] = user.id
-        access_token = create_access_token(identity=email)
-        return jsonify(access_token=access_token), 200
+        if not bcrypt.check_password_hash(user.password, password):
+            return jsonify({"error": "Password is incorrect"}), 404
+        
+        # session['loggedin'] = True
+        # session['userid'] = user.id
+        # session['username'] = user.username
+        # session['email'] = user.email
+        login_user(user)
+        return jsonify({
+            "id": user.id,
+            "email": user.email,
+            "password": user.password,
+            
+        }), 201
 
 @app.route("/get_scores", methods=["GET"])
 def get_scores():
