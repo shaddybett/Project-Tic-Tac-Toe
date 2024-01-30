@@ -120,9 +120,9 @@ def login():
         password = request.json["password"]
         user = User.query.filter_by(email=email).first()
         if user is None:
-            return jsonify({"error": "Email does not exist"}), 404
+            return jsonify({"error": "Email does not exist"}), 401
         if not bcrypt.check_password_hash(user.password, password):
-            return jsonify({"error": "Password is incorrect"}), 404
+            return jsonify({"error": "Password is incorrect"}), 401
         
         # session['loggedin'] = True
         # session['userid'] = user.id

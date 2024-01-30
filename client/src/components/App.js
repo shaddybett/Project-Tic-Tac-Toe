@@ -22,6 +22,9 @@ function App() {
           <Route exact path="/scores">
             <AllScores />
           </Route>
+          <Route exact path="/profile">
+
+          </Route>
           <Route exact path="/signup">
             <SignupForm />
           </Route>
