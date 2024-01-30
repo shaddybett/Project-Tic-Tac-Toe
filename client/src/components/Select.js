@@ -8,6 +8,7 @@ const Select = () => {
       
       <Link to="/game" className='game'>New Game</Link>
       <Link to="/scores" className='game'>Scores</Link>
+      <Link to="/profile" className='game'>Profile</Link>
     </div>
   );
 };

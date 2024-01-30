@@ -23,7 +23,7 @@ function App() {
             <AllScores />
           </Route>
           <Route exact path="/profile">
-
+            <UserProfile />
           </Route>
           <Route exact path="/signup">
             <SignupForm />

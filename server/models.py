@@ -1,14 +1,20 @@
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
     user_scores = db.relationship('UserScore', backref='user', lazy=True)
+    is_active = db.Column(db.Boolean(), default=True)
+
+    def get_id(self):
+        return str(self.id)
+
 
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)

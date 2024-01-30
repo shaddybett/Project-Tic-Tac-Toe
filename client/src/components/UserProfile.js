@@ -35,13 +35,15 @@ const UserProfile = () => {
     };
 
     return (
-        <div>
+        <div className='profile-div'>
             <h1>User Profile</h1>
             <p>Name: {user.username}</p>
-            <input type="text" value={user.username} onChange={e => setUser({...user, username: e.target.value})} />
-            <input type="email" value={user.email} onChange={e => setUser({...user, email: e.target.value})} />
-            <button onClick={handleUpdate}>Update Profile</button>
-            <button onClick={handleDelete}>Delete Profile</button>
+            <label>Username</label>
+            <input type="text" value={user.username} onChange={e => setUser({...user, username: e.target.value})} /><br></br>
+            <label>Email</label>
+            <input type="email" value={user.email} onChange={e => setUser({...user, email: e.target.value})} /> <br></br>
+            <button className='profile-btn' onClick={handleUpdate}>Update Profile</button>
+            <button className='profile-btn' onClick={handleDelete}>Delete Profile</button>
         </div>
     );
 };

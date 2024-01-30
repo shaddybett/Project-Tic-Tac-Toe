@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom"; // Assuming you are using react-router-dom for navigation
-import UserProfile from "./UserProfile";
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -41,6 +40,7 @@ function LoginForm() {
     })
       .then((response) => {
         if (response.ok) {
+          console.log("It worked")
           history.push('/select');
         } else if (response.status === 401) {
           setFormErrors(["Invalid credentials"]);
