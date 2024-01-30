@@ -50,7 +50,10 @@ def home():
 def get_profile():
     # Return user profile information
     return jsonify({'user_id': current_user.id, 'username': current_user.username})
-def patch():
+
+@app.route("/profile/<int:id>", methods=['PATCH'])
+@login_required
+def patch(id):
     user = User.query.filter(User.id == id).first()
 
     data = request.get_json()
@@ -75,7 +78,9 @@ def patch():
         "error": "User not found"
     }, 400
 
-def delete():
+@app.route("/profile/<int:id>", methods=['DELETE'])
+@login_required
+def delete(id):
     user = User.query.filter_by(id=id).first()
 
     if user:
