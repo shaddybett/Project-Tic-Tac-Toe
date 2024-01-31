@@ -19,7 +19,7 @@ const UserProfile = () => {
             setUserDetails(data)
         })
         .catch(error => setError(error.error));
-    }, []);
+    }, [])
     
     console.log(userDetails)
     const handleUpdate = (e) => {
