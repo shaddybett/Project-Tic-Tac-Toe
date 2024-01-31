@@ -51,3 +51,14 @@ For development purposes, the API runs on port 5555 and includes debugging capab
 Note: Ensure that you have Python and pip installed on your machine before running the API.
 
 Feel free to explore the API and integrate it into your projects! If you encounter any issues or have suggestions, please let us know.
+
+# Contributors
+Charles Henry
+Shadrack Bett
+Joe Kisaka
+Onesmus Githua
+Ian Maboi
+Eve
+Elizabeth Muthoni
+Micheal Muchiri
+Evans Manoti
