@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
 
+
 const UserProfile = () => {
     const [user, setUser] = useState({});
     const [error, setError] = useState(null);
+    const [userDetails, setUserDetails] = useState([])
 
     useEffect(() => {
         // Fetch user data when component mounts
-        fetch('/profile', {
-            headers: {
-                'Accept': 'application/json',
-            },
-        })
+        fetch('/profile')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
-        .then(data => setUser(data))
+        .then(data => {
+            setUserDetails(data)
+        })
         .catch(error => setError(error.error));
     }, []);
-
+    
+    console.log(userDetails)
     const handleUpdate = (e) => {
         e.preventDefault();
 
@@ -31,7 +32,7 @@ const UserProfile = () => {
         }
 
         // Update user data
-        fetch('/profile', {
+        fetch(`/profile/${userDetails.id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -45,13 +46,13 @@ const UserProfile = () => {
             }
             return response.json();
         })
-        .then(data => setUser(data))
+        .then(data => setUserDetails(data))
         .catch(error => setError(error.error));
     };
 
     const handleDelete = () => {
         // Delete user profile
-        fetch('/profile', {
+        fetch(`/profile/${userDetails.id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -62,13 +63,13 @@ const UserProfile = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
         })
-        .then(() => setUser({}))
+        .then(() => setUserDetails({}))
         .catch(error => setError(error.error));
     };
 
     return (
         <div className='profile-div'>
-            <h1>User Profile</h1>
+            <h1>User Profile: {userDetails.username}</h1>
             {error && <p>{error.message}</p>}
             <form onSubmit={handleUpdate}>
                 <label>
