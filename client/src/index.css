@@ -171,7 +171,7 @@ code {
 }
 
 /*forms*/
-.login-page {
+.login-page, .profile-div {
   background-image: url('https://t3.ftcdn.net/jpg/02/85/90/44/360_F_285904463_52tKiXp592qUhmg24eS3f4k1kGQSji3f.jpg'); 
   background-size: cover;
   background-position: center;
@@ -255,7 +255,7 @@ code {
   font-size:larger;
 }
 
-#signup-btn{
+#signup-btn, .profile-btn{
   border-radius: 10px;
   padding: 10px;
   margin: 10px;
@@ -301,11 +301,15 @@ code {
 }
 
 
-#signup-btn:hover{
+#signup-btn, .profile-btn:hover{
   background-color: rgb(0, 255, 68);
   color: white;
   padding: 1p0x;
   border-radius: 10px;
   width: 200px;
   text-align: center;
+}
+
+.link-danger, .text-body, .profile-header{
+  color: aquamarine;
 }

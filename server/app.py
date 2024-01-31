@@ -1,6 +1,5 @@
 
 from flask import Flask, jsonify, request, session, make_response
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask_restful import Api, Resource, fields
@@ -24,7 +23,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
 
-login_manager = LoginManager(app)
+
 
 db.init_app(app)
 
@@ -36,7 +35,7 @@ user_fields = {
     'password': fields.String,
 }
 
-@login_manager.user_loader
+
 def load_user(user_id):
     return User.query.get(int(user_id))
 
@@ -46,12 +45,16 @@ def home():
 
 
 @app.route("/profile", methods=['GET'])
-@login_required
-def get_profile():
-    # Return user profile information
-    return jsonify({'user_id': current_user.id, 'username': current_user.username})
-def patch():
-    user = User.query.filter(User.id == id).first()
+def get_id():
+    user_id = session.get('user_id')
+
+    if user_id:
+        user_data = User.query.filter_by(id=user_id).first()
+        return jsonify({"username": user_data.username, "email": user_data.email, "id": user_data.id}), 200
+
+@app.route("/profile/<int:id>", methods=['PATCH'])
+def patch(id):
+    user = User.query.filter_by(id=id).first()
 
     data = request.get_json()
 
@@ -75,7 +78,8 @@ def patch():
         "error": "User not found"
     }, 400
 
-def delete():
+@app.route("/profile/<int:id>", methods=['DELETE'])
+def delete(id):
     user = User.query.filter_by(id=id).first()
 
     if user:
@@ -120,15 +124,14 @@ def login():
         password = request.json["password"]
         user = User.query.filter_by(email=email).first()
         if user is None:
-            return jsonify({"error": "Email does not exist"}), 404
+            return jsonify({"error": "Email does not exist"}), 401
         if not bcrypt.check_password_hash(user.password, password):
-            return jsonify({"error": "Password is incorrect"}), 404
+            return jsonify({"error": "Password is incorrect"}), 401
         
         # session['loggedin'] = True
-        # session['userid'] = user.id
+        session['user_id'] = user.id
         # session['username'] = user.username
         # session['email'] = user.email
-        login_user(user)
         return jsonify({
             "id": user.id,
             "email": user.email,

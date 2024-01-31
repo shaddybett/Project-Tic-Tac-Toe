@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom"; // Assuming you are using react-router-dom for navigation
-import UserProfile from "./UserProfile";
+
+let formData;
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const formData = {
+    formData = {
       email: email,
       password: password,
     };
@@ -59,6 +60,7 @@ function LoginForm() {
         console.error("Error during login:", error);
       });
   };
+
 
   
  
@@ -119,4 +121,6 @@ function LoginForm() {
     </div>
   );
 }
+
+
 export default LoginForm;

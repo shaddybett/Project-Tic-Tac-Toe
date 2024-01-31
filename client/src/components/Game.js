@@ -39,33 +39,84 @@ const Game = () => {
   const [gameOver, setGameOver] = useState(false);
   const [rounds, setRounds] = useState(0);
 
-  const handleBoxClick = (boxIdx) => {
-    if (gameOver) return;
-
-    const updatedBoard = board.map((value, idx) =>
-      idx === boxIdx ? (xPlaying ? "X" : "O") : value
-    );
-    clickAudio.currentTime = 0;
-    clickAudio.play();
-
-    setBoard(updatedBoard);
-
-    const winner = checkWinner(updatedBoard);
-
-    if (winner) {
-      updateScores(winner);
-      setRounds(rounds + 1);
-      if (rounds === 4) {
-        // Check if it's the fourth round (0-based index)
-        setGameOver(true);
-        saveScoresToDatabase();
+  const computerMove = () => {
+    console.log("computerMove called");
+    if (!gameOver) {
+      const emptyBoxes = board.reduce((acc, value, index) => {
+        if (!value) {
+          acc.push(index);
+        }
+        return acc;
+      }, []);
+  
+      const randomIndex = Math.floor(Math.random() * emptyBoxes.length);
+      const computerMoveIndex = emptyBoxes[randomIndex];
+  
+      const updatedBoard = [...board];
+      updatedBoard[computerMoveIndex] = xPlaying ? "X" : "O";
+  
+      setBoard(updatedBoard);
+  
+      // Check for winner after the computer's move
+      const winnerAfterComputerMove = checkWinner(updatedBoard);
+      if (winnerAfterComputerMove) {
+        updateScores(winnerAfterComputerMove);
+        setRounds(rounds + 1);
+        if (rounds === 4) {
+          // Check if it's the fourth round (0-based index)
+          setGameOver(true);
+          saveScoresToDatabase();
+          return;
+        }
+        resetBoard();
         return;
+      } else {
+        // Change active player
+        setXPlaying(!xPlaying);
       }
-      resetBoard();
-      return;
     }
+  };
 
-    setXPlaying(!xPlaying);
+  useEffect(() => {
+    if (!xPlaying && !gameOver) {
+      setTimeout(computerMove, 100);
+    }
+  }, [xPlaying]);
+
+  const handleBoxClick = (boxIdx) => {
+    console.log("handleBoxClick called with boxIdx:", boxIdx)
+    if (!gameOver && (!xPlaying || !board[boxIdx])) {
+      // Update the board for human player
+      const updatedBoard = board.map((value, idx) => {
+        if (idx === boxIdx && !value) {
+          return xPlaying ? "X" : "O";
+        } else {
+          return value;
+        }
+      });
+      clickAudio.currentTime = 0;
+      clickAudio.play();
+      setBoard(updatedBoard);
+
+      // Check for winner
+      const winner = checkWinner(updatedBoard);
+      if (winner) {
+        updateScores(winner);
+        setRounds(rounds + 1);
+        if (rounds === 4) {
+          // Check if it's the fourth round (0-based index)
+          setGameOver(true);
+          saveScoresToDatabase();
+          return;
+        }
+        resetBoard();
+        return;
+      } else {
+        // Change active player
+        setXPlaying(!xPlaying);
+      }
+    }
+    
   };
 
   const updateScores = (winner) => {
