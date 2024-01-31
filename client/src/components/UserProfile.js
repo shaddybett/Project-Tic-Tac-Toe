@@ -69,7 +69,7 @@ const UserProfile = () => {
 
     return (
         <div className='profile-div'>
-            <h1>User Profile: {userDetails.username}</h1>
+            <h1 className='profile-header'>User Profile: {userDetails.username}</h1>
             {error && <p>{error.message}</p>}
             <form onSubmit={handleUpdate}>
                 <label>

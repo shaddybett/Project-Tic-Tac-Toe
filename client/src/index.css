@@ -309,3 +309,7 @@ code {
   width: 200px;
   text-align: center;
 }
+
+.link-danger, .text-body, .profile-header{
+  color: aquamarine;
+}
